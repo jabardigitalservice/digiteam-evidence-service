@@ -1,4 +1,4 @@
-# Evidence Handling Service
+# Digiteam Evidence Service
 
 This repository contains a Node.js service built to receive webhooks from GitHub, GitLab, and Qase IO. The processed data is then formatted into evidence reports for integration with the Digiteam application.
 
