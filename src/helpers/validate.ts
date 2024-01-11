@@ -1,7 +1,6 @@
 import Joi from 'joi'
 import error from '../pkg/error'
 import statusCode from '../pkg/statusCode'
-import { Translate } from './translate'
 
 const getValidationErrors = (validationErrors: Joi.ValidationErrorItem[]) => {
     const errors: Record<string, string> = {}
