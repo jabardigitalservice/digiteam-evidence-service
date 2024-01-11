@@ -39,17 +39,19 @@ class Usecase {
 
             evidence.source = body.source
 
-            const messageByCreated = this.telegram.FormatByCreated(evidence)
-            const messageByReview = this.telegram.FormatByReview(evidence)
+            // console.log(evidence)
 
-            if (evidence.screenshot) {
-                this.telegram.SendPhotoWithChannel(evidence, messageByCreated)
-                this.telegram.SendPhotoWithChannel(evidence, messageByReview)
-                return
-            }
+            // const messageByCreated = this.telegram.FormatByCreated(evidence)
+            // const messageByReview = this.telegram.FormatByReview(evidence)
 
-            this.telegram.SendMessageWithChannel(messageByCreated)
-            this.telegram.SendMessageWithChannel(messageByReview)
+            // if (evidence.screenshot) {
+            //     this.telegram.SendPhotoWithChannel(evidence, messageByCreated)
+            //     this.telegram.SendPhotoWithChannel(evidence, messageByReview)
+            //     return
+            // }
+
+            // this.telegram.SendMessageWithChannel(messageByCreated)
+            // this.telegram.SendMessageWithChannel(messageByReview)
 
             this.logger.Info('success send evidence', {
                 category: 'evidence',
