@@ -58,7 +58,7 @@ class TelegramUser {
                 )
                 telegramUser = user
             } catch (error) {
-                const cacheUsers = await this.redis.Get(this.cacheKeyBackup)
+                cacheUsers = await this.redis.Get(this.cacheKeyBackup)
                 if (cacheUsers) {
                     telegramUser = JSON.parse(cacheUsers)
                 } else {
