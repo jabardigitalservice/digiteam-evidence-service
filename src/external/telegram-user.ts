@@ -27,7 +27,7 @@ class TelegramUser {
         return user
     }
 
-    public async GetParticipants(participants: string[], users: Users[]) {
+    public async ReplaceToUserTelegram(participants: string[], users: Users[]) {
         const newParticipants: string[] = []
         for (const participant of participants) {
             newParticipants.push(this.searchUser(participant, users))

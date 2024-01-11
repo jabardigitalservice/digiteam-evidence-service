@@ -89,31 +89,7 @@ class Usecase {
         return evidence
     }
 
-    private getEvidenceFromDescription = async (
-        description: string,
-        participants: string[]
-    ): Promise<Evidence> => {
-        const evidence = this.validateEvidence({
-            project: this.evidenceRegex.project.exec(description),
-            title: this.evidenceRegex.title.exec(description),
-            participants: this.evidenceRegex.participants.exec(description),
-            date: this.evidenceRegex.date.exec(description),
-            screenshot: this.evidenceRegex.screenshot.exec(description),
-            attachment: this.evidenceRegex.attachment.exec(description),
-        })
-
-        if (!evidence.isValid)
-            throw new error(
-                statusCode.BAD_REQUEST,
-                Translate('not_valid', { attribute: 'format' })
-            )
-
-        evidence.participants = evidence.participants
-            ? evidence.participants.split(/[ ,]+/)
-            : []
-
-        const users = participants.length ? participants : evidence.participants
-
+    private async getTelegramUser() {
         let cacheUsers = await this.redis.Get(this.cacheKey)
         let telegramUser
         if (!cacheUsers) {
@@ -142,7 +118,37 @@ class Usecase {
             telegramUser = JSON.parse(cacheUsers)
         }
 
-        evidence.participants = await this.telegramUser.GetParticipants(
+        return telegramUser
+    }
+
+    private getEvidenceFromDescription = async (
+        description: string,
+        participants: string[]
+    ): Promise<Evidence> => {
+        const evidence = this.validateEvidence({
+            project: this.evidenceRegex.project.exec(description),
+            title: this.evidenceRegex.title.exec(description),
+            participants: this.evidenceRegex.participants.exec(description),
+            date: this.evidenceRegex.date.exec(description),
+            screenshot: this.evidenceRegex.screenshot.exec(description),
+            attachment: this.evidenceRegex.attachment.exec(description),
+        })
+
+        if (!evidence.isValid)
+            throw new error(
+                statusCode.BAD_REQUEST,
+                Translate('not_valid', { attribute: 'format' })
+            )
+
+        evidence.participants = evidence.participants
+            ? evidence.participants.split(/[ ,]+/)
+            : []
+
+        const users = participants.length ? participants : evidence.participants
+
+        const telegramUser = await this.getTelegramUser()
+    
+        evidence.participants = await this.telegramUser.ReplaceToUserTelegram(
             users,
             telegramUser
         )
