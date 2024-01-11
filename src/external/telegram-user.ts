@@ -42,7 +42,7 @@ class TelegramUser {
 
     public async GetTelegramUser() {
         let cacheUsers = await this.redis.Get(this.cacheKey)
-        let telegramUser
+        let telegramUser: Users[]
         if (!cacheUsers) {
             try {
                 const user = await this.GetUsers()
