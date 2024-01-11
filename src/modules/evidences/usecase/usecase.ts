@@ -1,20 +1,16 @@
-import { Config } from '../../../config/config.interface'
 import Screenshot from '../../../external/screenshot'
 import Telegram from '../../../external/telegram'
 import TelegramUser from '../../../external/telegram-user'
 import { Translate } from '../../../helpers/translate'
 import error from '../../../pkg/error'
 import Logger from '../../../pkg/logger'
-import Redis from '../../../pkg/redis'
 import statusCode from '../../../pkg/statusCode'
 import { Evidence } from '../entity/interface'
 
 class Usecase {
     constructor(
         private logger: Logger,
-        private redis: Redis,
         private telegramUser: TelegramUser,
-        private config: Config,
         private screesshot: Screenshot,
         private telegram: Telegram
     ) {}
@@ -27,9 +23,6 @@ class Usecase {
         screenshot: /screenshot: (.+)/i,
         attachment: /attachment: (.+)/i,
     }
-
-    private cacheKey = 'telegram-user'
-    private cacheKeyBackup = 'telegram-user-backup'
 
     public async Evidence(body: Evidence) {
         try {
@@ -89,38 +82,6 @@ class Usecase {
         return evidence
     }
 
-    private async getTelegramUser() {
-        let cacheUsers = await this.redis.Get(this.cacheKey)
-        let telegramUser
-        if (!cacheUsers) {
-            try {
-                const user = await this.telegramUser.GetUsers()
-                await this.redis.Store(
-                    this.cacheKey,
-                    JSON.stringify(user),
-                    this.config.redis.ttl
-                )
-                await this.redis.Store(
-                    this.cacheKeyBackup,
-                    JSON.stringify(user),
-                    0
-                )
-                telegramUser = user
-            } catch (error) {
-                const cacheUsers = await this.redis.Get(this.cacheKeyBackup)
-                if (cacheUsers) {
-                    telegramUser = JSON.parse(cacheUsers)
-                } else {
-                    telegramUser = []
-                }
-            }
-        } else {
-            telegramUser = JSON.parse(cacheUsers)
-        }
-
-        return telegramUser
-    }
-
     private getEvidenceFromDescription = async (
         description: string,
         participants: string[]
@@ -145,9 +106,8 @@ class Usecase {
             : []
 
         const users = participants.length ? participants : evidence.participants
+        const telegramUser = await this.telegramUser.GetTelegramUser()
 
-        const telegramUser = await this.getTelegramUser()
-    
         evidence.participants = await this.telegramUser.ReplaceToUserTelegram(
             users,
             telegramUser

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Config } from '../config/config.interface'
+import Redis from '../pkg/redis'
 
 interface Users {
     Timestamp: Date
@@ -8,9 +9,12 @@ interface Users {
 }
 
 class TelegramUser {
-    constructor(private config: Config) {}
+    private cacheKey = 'telegram-user'
+    private cacheKeyBackup = 'telegram-user-backup'
 
-    public async GetUsers(): Promise<Users[]> {
+    constructor(private config: Config, private redis: Redis) {}
+
+    private async GetUsers(): Promise<Users[]> {
         try {
             const { data } = await axios.get(this.config.telegram.users)
 
@@ -34,6 +38,38 @@ class TelegramUser {
         }
 
         return newParticipants
+    }
+
+    public async GetTelegramUser() {
+        let cacheUsers = await this.redis.Get(this.cacheKey)
+        let telegramUser
+        if (!cacheUsers) {
+            try {
+                const user = await this.GetUsers()
+                await this.redis.Store(
+                    this.cacheKey,
+                    JSON.stringify(user),
+                    this.config.redis.ttl
+                )
+                await this.redis.Store(
+                    this.cacheKeyBackup,
+                    JSON.stringify(user),
+                    0
+                )
+                telegramUser = user
+            } catch (error) {
+                const cacheUsers = await this.redis.Get(this.cacheKeyBackup)
+                if (cacheUsers) {
+                    telegramUser = JSON.parse(cacheUsers)
+                } else {
+                    telegramUser = []
+                }
+            }
+        } else {
+            telegramUser = JSON.parse(cacheUsers)
+        }
+
+        return telegramUser
     }
 }
 

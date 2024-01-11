@@ -2,7 +2,6 @@ import Joi from 'joi'
 import error from '../pkg/error'
 import statusCode from '../pkg/statusCode'
 import { Translate } from './translate'
-import { isValidObjectId } from './mongoose'
 
 const getValidationErrors = (validationErrors: Joi.ValidationErrorItem[]) => {
     const errors: Record<string, string> = {}
@@ -63,15 +62,4 @@ export const ValidateParams = (schema: Joi.Schema, values: any) => {
     }
 
     return value
-}
-
-export const ValidateObjectId = (id: string, attribute: string) => {
-    if (!isValidObjectId(id)) {
-        throw new error(
-            statusCode.BAD_REQUEST,
-            Translate('object_id', { attribute })
-        )
-    }
-
-    return id
 }

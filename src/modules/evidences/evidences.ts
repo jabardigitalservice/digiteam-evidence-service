@@ -8,7 +8,6 @@ import TelegramUser from '../../external/telegram-user'
 import Screenshot from '../../external/screenshot'
 import Telegram from '../../external/telegram'
 import { VerifySecretKey } from '../../transport/http/middleware/verifyAuth'
-import Jwt from '../../pkg/jwt'
 
 class Evidences {
     constructor(
@@ -17,17 +16,10 @@ class Evidences {
         private config: Config,
         redis: Redis
     ) {
-        const telegramUser = new TelegramUser(config)
+        const telegramUser = new TelegramUser(config, redis)
         const screenshot = new Screenshot(config)
         const telegram = new Telegram(config, logger)
-        const usecase = new Usecase(
-            logger,
-            redis,
-            telegramUser,
-            config,
-            screenshot,
-            telegram
-        )
+        const usecase = new Usecase(logger, telegramUser, screenshot, telegram)
         this.loadHttp(usecase)
     }
 
