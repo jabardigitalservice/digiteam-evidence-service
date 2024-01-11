@@ -1,165 +1,69 @@
-# Digiteam Evidence Service
+# Evidence Handling Service
 
-- TBD
+This repository contains a Node.js service built to receive webhooks from GitHub, GitLab, and Qase IO. The processed data is then formatted into evidence reports for integration with the Digiteam application.
+
+## Table of Contents
+- [Introduction](#introduction)
+- [Usage](#usage)
+- [Format for Evidence in Description](#format-for-evidence-in-description)
+- [Tech Stack](#tech-stack)
+- [External Services](#external-services)
+- [Setup](#setup)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Introduction
+
+The Evidence Handling Service is designed to streamline the process of generating evidence reports for the Digiteam application. It accepts webhooks from GitHub, GitLab, and Qase IO, processes the data, and creates reports based on a specified format.
+
+## Usage
+
+To use this service, follow the instructions outlined in the [Format for Evidence in Description](#format-for-evidence-in-description) section. Ensure that your webhook descriptions adhere to the specified format to generate accurate evidence reports.
+
+## Format for Evidence in Description
+
+Add the following format to your webhook description:
+
+```markdown
+# Evidence
+- title: [Judul Laporan]
+- project: [Nama Project]
+- participants: [Nama Anggota 1], [Nama Anggota 2], ...
+- screenshot: [URL Screenshot]
+- date: [Tanggal (optional, format: yyyy-mm-dd)]
+- attachment: [URL Lampiran 1], [URL Lampiran 2], ...
+```
+
+Replace the placeholders with the relevant information for your evidence report.
 
 ## Tech Stack
 
 - Node.js v14
-- Mongoose (MongoDB ODM)
-- Sequelize (SQL ORM)
 - TypeScript
 - Docker
 - Express (HTTP framework)
+- Redis
 
-## Design Pattern: Clean Architecture
+## External Services
 
-The project follows the principles of Clean Architecture, emphasizing separation of concerns into distinct layers:
+- Screenshot Service
+- Telegram
+- Telegram User (containing Digiteam members list)
 
-- **Entities**: Representing the core business entities.
-- **Use Cases**: Defining application-specific business rules.
-- **Interface Adapters**: Implementing details for external frameworks and tools.
-- **Frameworks & Drivers**: Implementing details for external frameworks and tools (Express, databases, etc.).
+## Setup
 
-## Installation
+Follow these steps to set up and run the Evidence Handling Service:
 
-1. Clone the repository:
+1. Clone this repository.
+2. Install dependencies using `npm install`.
+3. Configure environment variables (e.g., GitHub, GitLab, Qase IO credentials, Redis connection).
+4. Build the TypeScript code using `npm run build`.
+5. Run the service using `npm start`.
 
-   ```bash
-   git clone https://github.com/jabardigitalservice/digiteam-evidence-service.git
-   ```
+## Contributing
 
-2. Navigate to the project directory:
+Contributions are welcome! Please follow the guidelines outlined in the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
-   ```bash
-   cd digiteam-evidence-service
-   ```
+## License
 
-3. Install dependencies:
-
-   ```bash
-   npm install
-   ```
-
-4. Copy the appropriate environment file:
-
-     ```bash
-     cp .env.example .env
-     ```
-
-   Customize the `.env` file according to your configuration.
-
-## Usage
-
-### Development
-
-```bash
-npm run start:dev
-```
-
-### Build
-
-```bash
-npm run build
-```
-
-### Start
-
-```bash
-npm start
-```
-
-### Docker
-
-Build Docker image:
-
-```bash
-docker -f docker/Dockerfile build -t your-image-name .
-```
-
-Run Docker container:
-
-```bash
-docker run -p 3000:3000 -d your-image-name
-```
-
-## Additional Scripts
-
-- **Linting:**
-  - Check code formatting:
-    ```bash
-    npm run lint
-    ```
-  - Fix code formatting:
-    ```bash
-    npm run lint:fix
-    ```
-
-- **Database Migration:**
-  - Run migrations:
-    ```bash
-    npm run migrate:up
-    ```
-  - Rollback migrations:
-    ```bash
-    npm run migrate:down
-    ```
-
-- **Local Database Migration (development):**
-  - Generate migration file:
-    ```bash
-    npm run migration:generate --name your-migration-name
-    ```
-  - Run migrations:
-    ```bash
-    npm run migrate:up:local
-    ```
-  - Rollback migrations:
-    ```bash
-    npm run migrate:down:local
-    ```
-
-- **Seed:**
-  - Run Seed:
-    ```bash
-    npm run seed:run --name your-seed-filename
-    ```
-
-
-- **Cron:**
-  - Run Cron:
-    ```bash
-    npm run seed:run --name your-cron-filename
-    ```
-
-- **Testing:**
-  - Run tests:
-    ```bash
-    npm test
-    ```
-
-## Folder Structure Modules
-
-```bash
-modules/
-└── name module/
-    ├── delivery/
-    │   ├── http/
-    │   │   └── handler.ts
-    │   ├── grpc/
-    │   │   └── handler.ts
-    │   └── graphQL/
-    │       └── handler.ts
-    ├── entity/
-    │   ├── interface.ts // for the core business entities
-    │   └── schema.ts // for the schema validation
-    ├── repository/
-    │   ├── mongo/
-    │   │   └── repository.ts
-    │   ├── mySQL/
-    │   │   └── repository.ts
-    │   └── postgreSQL/
-    │       └── repository.ts
-    ├── usecase/
-    │   └── usecase.ts
-    └── name module.ts // for init the module to load in the main
-```
+This project is licensed under the [MIT License](LICENSE).
