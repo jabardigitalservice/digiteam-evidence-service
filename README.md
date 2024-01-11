@@ -26,12 +26,12 @@ Add the following format to your webhook description:
 
 ```markdown
 # Evidence
-- title: [Judul Laporan]
-- project: [Nama Project]
-- participants: [Nama Anggota 1], [Nama Anggota 2], ...
-- screenshot: [URL Screenshot]
-- date: [Tanggal (optional, format: yyyy-mm-dd)]
-- attachment: [URL Lampiran 1], [URL Lampiran 2], ...
+- title: Report Title
+- project: Project Name
+- participants: Member1 Member2
+- screenshot: [Public Image URL]
+- date: yyyy-mm-dd (optional)
+- attachment: [Attachment URL] (optional)
 ```
 
 Replace the placeholders with the relevant information for your evidence report.
