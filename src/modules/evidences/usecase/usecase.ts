@@ -36,6 +36,7 @@ class Usecase {
             evidence.screenshot = evidence.screenshot
                 ? evidence.screenshot
                 : await this.screesshot.GetImage(evidence.attachment)
+            evidence.description = body.description
 
             evidence.source = body.source
 
