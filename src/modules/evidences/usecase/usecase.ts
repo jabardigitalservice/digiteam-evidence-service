@@ -30,14 +30,11 @@ class Usecase {
                 body.description,
                 body.participants
             )
-            evidence.attachment = evidence.attachment
-                ? evidence.attachment
-                : body.attachment
-            evidence.screenshot = evidence.screenshot
-                ? evidence.screenshot
-                : await this.screesshot.GetImage(evidence.attachment)
+            evidence.attachment = evidence.attachment || body.attachment
+            evidence.screenshot =
+                evidence.screenshot ||
+                (await this.screesshot.GetImage(evidence.attachment))
             evidence.description = body.description
-
             evidence.source = body.source
 
             const messageByCreated = this.telegram.FormatByCreated(evidence)
