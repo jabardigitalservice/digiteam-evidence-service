@@ -8,6 +8,10 @@ class Screenshot {
         try {
             const { data } = await axios.post(this.config.screenshot.url, {
                 url,
+                property: {
+                    height: 1280,
+                    width: 1280,
+                },
             })
 
             return data.data.url
