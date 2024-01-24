@@ -43,6 +43,10 @@ class Usecase {
             if (evidence.screenshot) {
                 this.telegram.SendPhotoWithChannel(evidence, messageByCreated)
                 this.telegram.SendPhotoWithChannel(evidence, messageByReview)
+                this.logger.Info('success send evidence', {
+                    category: 'evidence',
+                    evidence,
+                })
                 return
             }
 
