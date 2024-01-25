@@ -14,13 +14,18 @@ class TelegramUser {
 
     constructor(private config: Config, private redis: Redis) {}
 
-    private async GetUsers(): Promise<Users[]> {
+    private async loadUsers(): Promise<void> {
         try {
             const { data } = await axios.get(this.config.telegram.users)
 
-            return data.rows
+            const users = JSON.stringify(data.rows)
+
+            await this.redis.Store(this.cacheKey, users, this.config.redis.ttl)
+
+            await this.redis.Store(this.cacheKey, users, this.config.redis.ttl)
         } catch (error) {
-            return []
+            const users = await this.redis.Get(this.cacheKeyBackup)
+            await this.redis.Store(this.cacheKey, users, this.config.redis.ttl)
         }
     }
 
@@ -41,29 +46,13 @@ class TelegramUser {
     }
 
     public async GetTelegramUser() {
-        let cacheUsers = await this.redis.Get(this.cacheKey)
-        let telegramUser: Users[]
-        if (!cacheUsers) {
-            try {
-                const user = await this.GetUsers()
-                await this.redis.Store(
-                    this.cacheKey,
-                    JSON.stringify(user),
-                    this.config.redis.ttl
-                )
-                await this.redis.Store(
-                    this.cacheKeyBackup,
-                    JSON.stringify(user),
-                    0
-                )
-                telegramUser = user
-            } catch (error) {
-                cacheUsers = await this.redis.Get(this.cacheKeyBackup)
-                telegramUser = cacheUsers ? JSON.parse(cacheUsers) : []
-            }
-        } else {
-            telegramUser = JSON.parse(cacheUsers)
-        }
+        let telegramUser: Users[] = []
+        const cacheUsers = await this.redis.Get(this.cacheKey)
+        if (!cacheUsers) await this.loadUsers()
+
+        const users = await this.redis.Get(this.cacheKey)
+
+        if (users) telegramUser = JSON.parse(users)
 
         return telegramUser
     }
