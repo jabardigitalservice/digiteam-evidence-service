@@ -52,12 +52,16 @@ class Telegram {
             ? evidence.participants[0]
             : ''
         const date = evidence.date ? `Tanggal: ${evidence.date}` : ''
+        const difficulty = evidence.difficulty
+            ? `Kesulitan: ${evidence.difficulty}`
+            : ''
 
         const message = `
   /lapor ${evidence.project} | ${evidence.title}
 Peserta: ${participants}
 Lampiran: ${evidence.attachment}
 ${date}
+${difficulty}
 `
         return participants ? message : ''
     }

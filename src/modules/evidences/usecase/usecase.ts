@@ -22,6 +22,7 @@ class Usecase {
         date: /date: (.+)/i,
         screenshot: /screenshot: (.+)/i,
         attachment: /attachment: (.+)/i,
+        difficulty: /difficulty: (.+)/i,
     }
 
     public async Evidence(body: Evidence) {
@@ -95,6 +96,7 @@ class Usecase {
             date: this.evidenceRegex.date.exec(description),
             screenshot: this.evidenceRegex.screenshot.exec(description),
             attachment: this.evidenceRegex.attachment.exec(description),
+            difficulty: this.evidenceRegex.difficulty.exec(description),
         })
 
         if (!evidence.isValid)

@@ -6,6 +6,7 @@ export type Evidence = {
     date?: string
     screenshot?: string
     attachment: string
+    difficulty?: string
     isValid?: boolean
     source: string
 }
