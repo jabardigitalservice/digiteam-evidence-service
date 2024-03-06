@@ -6,7 +6,18 @@ export type Evidence = {
     date?: string
     screenshot?: string
     attachment: string
-    difficulty?: string
+    difficulty?: number
     isValid?: boolean
+    source: string
+}
+
+export type EvidenceWithForm = {
+    title: string
+    project: string
+    participants: string
+    date: string
+    screenshot: string
+    attachment: string
+    difficulty: number
     source: string
 }

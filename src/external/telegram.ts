@@ -85,12 +85,17 @@ ${date}
             ? evidence.participants.join('  ')
             : ''
         const date = evidence.date ? `Tanggal: ${evidence.date}` : ''
+        const difficulty =
+            evidence.difficulty && evidence.difficulty !== 3
+                ? `Kesulitan: ${evidence.difficulty}`
+                : ''
 
         const message = `
 /lapor ${evidence.project} | ${evidence.title}
-Peserta: ${participant}}
+Peserta: ${participant}
 Lampiran: ${evidence.attachment}
 ${date}
+${difficulty}
 `
         return participant ? message : ''
     }

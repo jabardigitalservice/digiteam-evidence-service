@@ -8,6 +8,8 @@ import error from '../../../../pkg/error'
 import { Evidence } from '../../entity/interface'
 import { GitlabMerge } from '../../entity/gitlab-merge.interface'
 import { Qase } from '../../entity/qase.interface'
+import { ValidateFormRequest } from '../../../../helpers/validate'
+import { EvidenceWithForm } from '../../entity/schema'
 
 class Handler {
     constructor(
@@ -118,17 +120,12 @@ class Handler {
             }
         }
     }
-    public Evidence() {
+    public EvidenceWithForm() {
         return async (req: any, res: Response, next: NextFunction) => {
             try {
-                const evidence: Evidence = {
-                    description: req.body?.description ?? '',
-                    source: 'Evidence',
-                    attachment: '',
-                    participants: [],
-                }
+                const value = ValidateFormRequest(EvidenceWithForm, req.body)
 
-                this.usecase.Evidence(evidence)
+                await this.usecase.EvidenceWithForm(value)
                 this.logger.Info(statusCode[statusCode.OK], {
                     additional_info: this.http.AdditionalInfo(
                         req,

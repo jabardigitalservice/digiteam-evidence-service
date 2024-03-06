@@ -5,7 +5,7 @@ import { Translate } from '../../../helpers/translate'
 import error from '../../../pkg/error'
 import Logger from '../../../pkg/logger'
 import statusCode from '../../../pkg/statusCode'
-import { Evidence } from '../entity/interface'
+import { Evidence, EvidenceWithForm } from '../entity/interface'
 
 class Usecase {
     constructor(
@@ -40,6 +40,9 @@ class Usecase {
 
             const messageByCreated = this.telegram.FormatByCreated(evidence)
             const messageByReview = this.telegram.FormatByReview(evidence)
+            console.log(evidence)
+
+            return
 
             if (evidence.screenshot) {
                 this.telegram.SendPhotoWithChannel(evidence, messageByCreated)
@@ -63,6 +66,37 @@ class Usecase {
                 category: 'evidence',
                 evidence: body,
             })
+        }
+    }
+
+    public async EvidenceWithForm(body: EvidenceWithForm) {
+        try {
+            const participants = await this.getUsersFormTelegram(
+                body.participants.split(/[ ,]+/)
+            )
+
+            const evidence: Evidence = {
+                ...body,
+                participants,
+                attachment: body.attachment,
+                description: '',
+                source: body.source,
+            }
+            const message = this.telegram.FormatDefault(evidence)
+
+            console.log(evidence)
+
+            // await this.telegram.SendPhotoWithChannel(evidence, message)
+            // this.logger.Info('success send evidence', {
+            //     category: 'evidence',
+            //     evidence,
+            // })
+        } catch (err: any) {
+            this.logger.Error(err.message, {
+                category: 'evidence',
+                evidenceWithForm: body,
+            })
+            throw err
         }
     }
 
@@ -109,15 +143,28 @@ class Usecase {
             ? evidence.participants.split(/[ ,]+/)
             : []
 
-        const users = participants.length ? participants : evidence.participants
-        const telegramUser = await this.telegramUser.GetTelegramUser()
+        evidence.participants = participants.length
+            ? participants
+            : evidence.participants
 
-        evidence.participants = await this.telegramUser.ReplaceToUserTelegram(
-            users,
-            telegramUser
+        evidence.participants = await this.getUsersFormTelegram(
+            evidence.participants
         )
 
         return evidence
+    }
+
+    private getUsersFormTelegram = async (
+        participants: string[]
+    ): Promise<string[]> => {
+        const telegramUser = await this.telegramUser.GetTelegramUser()
+
+        participants = await this.telegramUser.ReplaceToUserTelegram(
+            participants,
+            telegramUser
+        )
+
+        return participants
     }
 }
 
