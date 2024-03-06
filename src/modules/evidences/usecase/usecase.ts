@@ -91,7 +91,6 @@ class Usecase {
                 category: 'evidence',
                 evidenceWithForm: body,
             })
-            throw err
         }
     }
 

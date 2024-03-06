@@ -125,7 +125,7 @@ class Handler {
             try {
                 const value = ValidateFormRequest(EvidenceWithForm, req.body)
 
-                await this.usecase.EvidenceWithForm(value)
+                this.usecase.EvidenceWithForm(value)
                 this.logger.Info(statusCode[statusCode.OK], {
                     additional_info: this.http.AdditionalInfo(
                         req,
