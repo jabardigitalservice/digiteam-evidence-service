@@ -40,9 +40,6 @@ class Usecase {
 
             const messageByCreated = this.telegram.FormatByCreated(evidence)
             const messageByReview = this.telegram.FormatByReview(evidence)
-            console.log(evidence)
-
-            return
 
             if (evidence.screenshot) {
                 this.telegram.SendPhotoWithChannel(evidence, messageByCreated)
@@ -84,13 +81,11 @@ class Usecase {
             }
             const message = this.telegram.FormatDefault(evidence)
 
-            console.log(evidence)
-
-            // await this.telegram.SendPhotoWithChannel(evidence, message)
-            // this.logger.Info('success send evidence', {
-            //     category: 'evidence',
-            //     evidence,
-            // })
+            await this.telegram.SendPhotoWithChannel(evidence, message)
+            this.logger.Info('success send evidence', {
+                category: 'evidence',
+                evidence,
+            })
         } catch (err: any) {
             this.logger.Error(err.message, {
                 category: 'evidence',
