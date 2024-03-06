@@ -49,6 +49,7 @@ class Evidences {
             VerifySecretKey(this.config),
             handler.Qase()
         )
+        Router.post('/evidence/', handler.Evidence())
 
         this.http.SetRouter('/', Router)
     }

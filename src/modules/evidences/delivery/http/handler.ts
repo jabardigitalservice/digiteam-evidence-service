@@ -118,6 +118,30 @@ class Handler {
             }
         }
     }
+    public Evidence() {
+        return async (req: any, res: Response, next: NextFunction) => {
+            try {
+                const evidence: Evidence = {
+                    description: req.body?.description ?? '',
+                    source: 'Evidence',
+                    attachment: '',
+                    participants: [],
+                }
+
+                this.usecase.Evidence(evidence)
+                this.logger.Info(statusCode[statusCode.OK], {
+                    additional_info: this.http.AdditionalInfo(
+                        req,
+                        statusCode.OK
+                    ),
+                })
+
+                return res.json({ message: 'Success' })
+            } catch (error) {
+                return next(error)
+            }
+        }
+    }
 }
 
 export default Handler
