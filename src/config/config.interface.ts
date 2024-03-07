@@ -36,7 +36,10 @@ export interface Config {
     telegram: {
         users: string
         url: string
-        chat_id: string
+        chat: {
+            itdev: string
+            jds: string
+        }
     }
     screenshot: {
         url: string

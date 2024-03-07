@@ -44,7 +44,10 @@ const config: Config = {
     telegram: {
         users: env.TELEGRAM_USERS,
         url: env.TELEGRAM_URL,
-        chat_id: env.TELEGRAM_CHAT_ID,
+        chat: {
+            jds: env.TELEGRAM_CHAT_ID_JDS,
+            itdev: env.TELEGRAM_CHAT_ID,
+        },
     },
     screenshot: {
         url: env.SCREENSHOT_URL,

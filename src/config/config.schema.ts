@@ -14,5 +14,6 @@ export default Joi.object({
     TELEGRAM_USERS: Joi.string().uri().required(),
     TELEGRAM_URL: Joi.string().uri().required(),
     TELEGRAM_CHAT_ID: Joi.string().required(),
+    TELEGRAM_CHAT_ID_JDS: Joi.string().required(),
     SCREENSHOT_URL: Joi.string().uri().required(),
 })

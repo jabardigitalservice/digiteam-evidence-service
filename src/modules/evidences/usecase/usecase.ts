@@ -1,3 +1,4 @@
+import { Config } from '../../../config/config.interface'
 import Screenshot from '../../../external/screenshot'
 import Telegram from '../../../external/telegram'
 import TelegramUser from '../../../external/telegram-user'
@@ -12,7 +13,8 @@ class Usecase {
         private logger: Logger,
         private telegramUser: TelegramUser,
         private screesshot: Screenshot,
-        private telegram: Telegram
+        private telegram: Telegram,
+        private config: Config
     ) {}
 
     private evidenceRegex = {
@@ -81,7 +83,7 @@ class Usecase {
             }
             const message = this.telegram.FormatDefault(evidence)
 
-            await this.telegram.SendPhotoWithChannel(evidence, message)
+            await this.telegram.SendPhotoWithChannel(evidence, message, this.config.telegram.chat.jds)
             this.logger.Info('success send evidence', {
                 category: 'evidence',
                 evidence,

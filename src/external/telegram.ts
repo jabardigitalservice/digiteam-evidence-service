@@ -4,13 +4,20 @@ import { Evidence } from '../modules/evidences/entity/interface'
 import Logger from '../pkg/logger'
 
 class Telegram {
-    constructor(private config: Config, private logger: Logger) {}
+    private chatDefault: string
+    constructor(private config: Config, private logger: Logger) {
+        this.chatDefault = config.telegram.chat.itdev
+    }
 
-    public async SendPhotoWithChannel(evidence: Evidence, caption: string) {
+    public async SendPhotoWithChannel(
+        evidence: Evidence,
+        caption: string,
+        chat_id: string = this.chatDefault
+    ) {
         if (!caption) return
         try {
             await axios.post(this.config.telegram.url + '/sendPhoto', {
-                chat_id: this.config.telegram.chat_id,
+                chat_id,
                 photo: evidence.screenshot,
                 caption,
             })
@@ -27,11 +34,14 @@ class Telegram {
         }
     }
 
-    public async SendMessageWithChannel(caption: string) {
+    public async SendMessageWithChannel(
+        caption: string,
+        chat_id: string = this.chatDefault
+    ) {
         if (!caption) return
         try {
             await axios.post(`${this.config.telegram.url}/sendMessage`, {
-                chat_id: this.config.telegram.chat_id,
+                chat_id,
                 text: caption,
             })
             this.logger.Info('success send message with channel', {

@@ -19,7 +19,7 @@ class Evidences {
         const telegramUser = new TelegramUser(config, redis)
         const screenshot = new Screenshot(config)
         const telegram = new Telegram(config, logger)
-        const usecase = new Usecase(logger, telegramUser, screenshot, telegram)
+        const usecase = new Usecase(logger, telegramUser, screenshot, telegram, config)
         this.loadHttp(usecase)
     }
 
