@@ -78,8 +78,8 @@ class Handler {
                 })
 
                 return res.json({ message: 'Success' })
-            } catch (error) {
-                return next(error)
+            } catch (error: any) {
+                return res.json({ message: 'failed: ' + error.message })
             }
         }
     }
